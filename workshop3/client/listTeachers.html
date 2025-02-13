@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>List of Teachers</title>
+</head>
+<body>
+  <h1>Teachers List</h1>
+  <ul id="teacherList"></ul>
+
+  <script>
+    function fetchTeachers() {
+      fetch('http://localhost:3000/api/teachers')
+        .then(response => {
+          if (!response.ok) throw new Error('Error al obtener la lista de profesores');
+          return response.json();
+        })
+        .then(teachers => {
+          const list = document.getElementById('teacherList');
+          list.innerHTML = "";
+          teachers.forEach(teacher => {
+            const li = document.createElement('li');
+            li.textContent = ` ${teacher.name} - ${teacher.subject}`;
+            list.appendChild(li);
+          });
+        })
+        .catch(error => alert('Error: ' + error.message));
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchTeachers);
+  </script>
+</body>
+</html>

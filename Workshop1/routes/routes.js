@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Model = require('../models/model'); // Asegúrate de que este modelo esté bien definido
+const Model = require('../models/model'); 
 
 // Método POST para agregar datos
 router.post('/post', async (req, res) => {

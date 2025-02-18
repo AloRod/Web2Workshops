@@ -1,32 +1,31 @@
+require('dotenv').config();
 const express = require('express');
-const app = express();
-const mongoose = require("mongoose");
-const port = 3000;
-// Conexión a la base de datos Workshop4
-const db=mongoose.connect("mongodb://127.0.0.1:27017/Workshop4", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => console.log("Conexion exitosa"))
-  .catch(err => console.error(" Error al conectar con MongoDB:", err));
+const mongoose = require('mongoose');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
-// Middleware
-app.use(cors({ domains: '*', methods: "*" }));
+const app = express();
+
+// Middlewares
+app.use(cors());
 app.use(bodyParser.json());
 
-// Importar controladores
-const { taskPatch, taskPost, taskGet } = require("./controllers/taskController.js");
-const { teacherPost, teacherGet, teacherPut, teacherDelete } = require("./controllers/teacherController.js");
+// Conectar a MongoDB 
+mongoose.connect(process.env.DATABASE_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('Conectado a MongoDB'))
+.catch(err => console.error('Error al conectar a MongoDB:', err));
 
-// Rutas de Tasks
-app.get("/api/tasks", taskGet);
-app.post("/api/tasks", taskPost);
-app.patch("/api/tasks", taskPatch);
-app.put("/api/tasks", taskPatch);
+// Importar rutas
+const teacherRoutes = require('./routes/routes'); 
+app.use('/teachers', teacherRoutes); // Ahora las rutas estarán en "/teachers"
+const CourseRoutes = require('./routes/routes'); 
+app.use('/courses', CourseRoutes); // Ahora las rutas estarán en "/courses"
 
-// Rutas de Teachers
-app.get("/api/teachers", teacherGet);
-app.post("/api/teachers", teacherPost);
-app.put("/api/teachers/:id", teacherPut);
-app.delete("/api/teachers/:id", teacherDelete);
-
-app.listen(port, () => console.log(`Servidor corriendo en http://localhost:${port}`));
+// Iniciar servidor
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+});

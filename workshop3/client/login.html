@@ -18,8 +18,8 @@
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();
             
-            const username = document.getElementById('alondra').value;
-            const password = document.getElementById('12345678').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
             
             // Para HTTP Basic Authentication
             const authHeader = 'Basic ' + btoa(username + ':' + password);
